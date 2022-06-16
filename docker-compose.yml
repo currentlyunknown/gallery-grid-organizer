@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  gallery:
+    build: .
+    command: poetry run python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - 8009:8000
+    env_file:
+      - .env
+
+  gallery-db:
+    image: postgres:15
+    volumes:
+      - .:/postgresql/data/
+    environment:
+      - POSTGRES_USER=gallery
+      - POSTGRES_PASSWORD=gallery
+      - POSTGRES_DB=gallery_dev
+
+volumes:
+  postgres_data:

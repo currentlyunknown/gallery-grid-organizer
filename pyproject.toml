@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "gallery-grid-organizer"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+celery = "^5.2.7"
+django = "^3.2"
+django-extensions = "^3.1.5"
+djangorestframework = "^3.13.1"
+environ = "^1.0"
+python-dotenv = "^0.21.0"
+pytest = "^7.2.0"
+psycopg2-binary = "^2.9.7"
+pytest-django = "^4.5.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
