@@ -20,6 +20,3 @@ class EndToEndTestCase(TestCase):
             [i.grid_position for i in Image.objects.all()],
             [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         )
-
-
-#  Yup, lots of e2e tests are missing. However, I cant dedicate more time

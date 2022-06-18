@@ -24,7 +24,7 @@ class EventPostView(GenericAPIView):
         serializer = EventCreateSerializer(data=request.data)
         if not serializer.is_valid() or not request.data.get("eventType"):
             logger.error(
-                f"/event/post: Error when {request.user} tried to post even with {request.data}."
+                f"/event/post: Error when {request.user} tried to post event with {request.data}."
             )
             return Response(
                 {"There request payload is not well formed"},
