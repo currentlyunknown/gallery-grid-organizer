@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django_extensions",
     "rest_framework",
-    "api",
     "gallery",
 ]
 

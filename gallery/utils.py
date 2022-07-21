@@ -8,7 +8,7 @@ celery = Celery()
 logger = logging.getLogger("project")
 
 
-@celery.task()  # Celery and Kombu installed but NOT CONFIGURED
+@celery.task()
 def order_dataset():
     """
     Async task to reorder grid_position.

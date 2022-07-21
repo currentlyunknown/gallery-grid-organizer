@@ -1,32 +1,30 @@
-from django.test import TestCase
+import pytest
 
 from gallery.models import Image, Event
 
 
-class ImageTestCase(TestCase):
+@pytest.mark.django_db
+def test_image():
+    # given
+    image = Image.objects.create(weight=100, grid_position=1)
 
-    def setUp(self):
-        self.image = Image.objects.create(weight=100, grid_position=1)
+    # when
+    output = f"{image.id} - {image.name} - {image.weight} - {image.grid_position}"
 
-    def test_image_creation(self):
-        result = Image.objects.create(weight=100, grid_position=1)
-        self.assertIsNotNone(result)
-
-    def test_representation(self):
-        output = f"{self.image.id} - {self.image.name} - {self.image.weight} - {self.image.grid_position}"
-        self.assertEqual(output, self.image.__str__())
+    # then
+    assert image is not None
+    assert str(image) == output
 
 
-class EventTestCase(TestCase):
+@pytest.mark.django_db
+def test_event():
+    # given
+    image = Image.objects.create(weight=100, grid_position=1)
+    event = Event.objects.create(image=image, views=2, clicks=4)
 
-    def setUp(self):
-        self.image = Image.objects.create(weight=100, grid_position=1)
+    # when
+    output = f"{event.created} - {event.views} - {event.clicks}"
 
-    def test_image_creation(self):
-        result = Event.objects.create(image=self.image)
-        self.assertIsNotNone(result)
-
-    def test_representation(self):
-        result = Event.objects.create(image=self.image, views=2, clicks=4)
-        output = f"{result.created} - {result.views} - {result.clicks}"
-        self.assertEqual(output, result.__str__())
+    # then
+    assert event is not None
+    assert str(event) == output

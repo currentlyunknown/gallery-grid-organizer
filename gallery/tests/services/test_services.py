@@ -1,49 +1,63 @@
-from django.test import TestCase
+import pytest
 
 from gallery.models import Image
 from gallery.services.events_service import EventService
 from gallery.services.image_service import ImageService
 
 
-class ImageServiceTestCase(TestCase):
-    def setUp(self):
-        self.image = Image.objects.create(weight=100, grid_position=1)
+@pytest.mark.django_db
+def test_service_one_image():
 
-    def test_service_get_one_image(self):
-        service_result = ImageService.get_image_by_id(self.image.id)
-        self.assertIsNotNone(service_result)
-        self.assertEqual(service_result.weight, self.image.weight)
+    # given
+    image = Image.objects.create(weight=100, grid_position=1)
 
-    def test_service_list_images(self):
-        Image.objects.create(weight=100, grid_position=1)
-        Image.objects.create(weight=10, grid_position=2)
-        Image.objects.create(weight=1, grid_position=3)
-        service_result = ImageService.get_all_images()
-        self.assertIsNotNone(service_result)
-        self.assertEqual(service_result.count(), Image.objects.count())
+    # when
+    service_result = ImageService.get_image_by_id(image.id)
 
-    def test_service_image_not_found(self):
-        service_result = ImageService.get_image_by_id(None)
-        self.assertIsNone(service_result)
-
-    def test_service_list_ordering_ok(self):
-        Image.objects.create(weight=1)
-        Image.objects.create(weight=10)
-        Image.objects.create(weight=20)
-        service_result = ImageService.get_all_images()
-        self.assertIsNotNone(service_result)
-        self.assertEqual([i.weight for i in service_result], [100, 20, 10, 1])
+    # then
+    assert service_result is not None
+    assert service_result.weight == image.weight
 
 
-class EventsServiceTestCase(TestCase):
-    def test_event_click_service_creation(self):
-        image = Image.objects.create(weight=100, grid_position=1)
-        event = EventService.create_event(image=image, event_type="click")
-        self.assertIsNotNone(event)
-        self.assertEqual(event.clicks, 1)
+@pytest.mark.django_db
+def test_service_many_images():
 
-    def test_event_view_service_creation(self):
-        image = Image.objects.create(weight=100, grid_position=1)
-        event = EventService.create_event(image=image, event_type="view")
-        self.assertIsNotNone(event)
-        self.assertEqual(event.views, 1)
+    # given
+    Image.objects.create(weight=100, grid_position=1)
+    Image.objects.create(weight=10, grid_position=2)
+    Image.objects.create(weight=1, grid_position=3)
+
+    # when
+    service_result = ImageService.get_all_images()
+
+    # then
+    assert service_result is not None
+    assert service_result.count() == Image.objects.count()
+    assert [i.weight for i in service_result] == [100.00, 10.00, 1.00]
+
+
+@pytest.mark.django_db
+def test_service_no_image():
+
+    # when
+    service_result = ImageService.get_image_by_id(None)
+
+    # then
+    assert service_result is None
+
+
+@pytest.mark.django_db
+def test_service_events():
+
+    # given
+    image = Image.objects.create(weight=100, grid_position=1)
+
+    # when
+    event_click = EventService.create_event(image=image, event_type="click")
+    event_view = EventService.create_event(image=image, event_type="view")
+
+    # then
+    assert event_view is not None
+    assert event_click is not None
+    assert event_view.views == 1
+    assert event_click.clicks == 1
